@@ -5,7 +5,7 @@
 import puzz.py
 
 class search(EightPuzzleBoard):
-    pass
+    def breadth
 
 
 
