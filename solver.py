@@ -47,10 +47,10 @@ class search(puzz.EightPuzzleBoard):
 if __name__ == '__main__':
 
     #board = EightPuzzleBoard('12345678')
-    board = puzz.EightPuzzleBoard('1234')
-    solution = puzz.EightPuzzleBoard('')
-    problm = search()
-    problm.breadth_search('123470568', '12')
+    board = puzz.EightPuzzleBoard('123450678')
+    solution = puzz.EightPuzzleBoard('123450678')
+    problm = search('123450678')
+    problm.breadth_search(solution)
 
    # solution = EightPuzzleBoard('12345678')
    # board.breadth_search(solution)
