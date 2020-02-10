@@ -6,51 +6,58 @@
 import puzz
 import queue
 
-class search(puzz.EightPuzzleBoard):
+class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
 
-    def breadth_search(self, solution, i = 0):
+    def breadth_search(self, solution):
         #
         frontier = queue.Queue()
         frontier.put(self)
         explored = []
-
+        count = 0
         while not frontier.empty():
             node = frontier.get()
             explored.append(node)
-            for n in node.successors():
-                if (n not in frontier) and (n not in explored):
+            for m, n in node.successors().items():
+                # ******** this section of code checks "n not in frontier" ********
+                boo = False
+                temp = frontier
+                while not temp.empty():
+                    node = temp.get()
+                    if node is n:
+                        boo = True
+                # ********************
+                if n and (n not in explored) and (not boo) :
+                    count += 1
                     if n == solution:
-                        return n
+                        return count
                     else:
                         frontier.put(n)
-        # if board = goal state:
-        # return number of steps
-        # x = success up()
-        # y = successs down()
-        # breadth_search(x)
-        # breadth_search(y)
         # ..................
         #
         return "fail"
 
+
+
     def uniform_cost_search(self, solution, i = 0):
+
         return 0
 
     def greedy_best_first_search(self, solution, i = 0):
+
         return 0
 
     def a_star_search(self, solution, i = 0):
+
         return 0
 
 
 
 if __name__ == '__main__':
-
-    #board = EightPuzzleBoard('12345678')
-    board = puzz.EightPuzzleBoard('123450678')
-    solution = puzz.EightPuzzleBoard('123450678')
-    problm = search('123450678')
-    problm.breadth_search(solution)
+    board = EightPuzzleBoard_Solver('346105278')
+    solution = puzz.EightPuzzleBoard('046315278')
+    solution = board.success_down()
+    solution = board.success_left()
+    print(board.breadth_search(solution))
 
    # solution = EightPuzzleBoard('12345678')
    # board.breadth_search(solution)
