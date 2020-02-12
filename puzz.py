@@ -20,6 +20,7 @@ class EightPuzzleBoard:
                 immediately after creation,
         """
         self._board = list(board_string)
+
         if mods:
             for x, y, val in mods:
                 self._set_tile(x, y, val)
@@ -106,6 +107,9 @@ class EightPuzzleBoard:
 
     def __eq__(self, other):
         return "".join(self._board) == "".join(other._board)
+
+    def __lt__(self, other):
+        return True
 
 
 
