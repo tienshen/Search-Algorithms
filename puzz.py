@@ -20,10 +20,17 @@ class EightPuzzleBoard:
                 immediately after creation,
         """
         self._board = list(board_string)
+        self._path = {}
 
         if mods:
             for x, y, val in mods:
                 self._set_tile(x, y, val)
+
+    def add_path(self, k, v):
+        self._path[k] = v
+
+    def path_cost(self):
+        return len(self._path)-1
 
     def _get_tile(self, x, y):  # return an individual tile value
         return self._board[6 - y * 3 + x]
