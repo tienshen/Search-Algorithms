@@ -67,6 +67,38 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
         return "fail:\npath cost: {}\nfrontier: {}\nexplored: {}".format(len(node._path)-1, frontCount, len(explored))
 
 
+    def manhattan_distance(self, solution):
+        location = {}
+        locationSol = {}
+        manHatDistance = 0
+        #dict to store location of each index
+        if solution:
+        # check if solution is valid
+            for x in range(3):  #iterate through each tile in board
+                for y in range(3):
+                    current = self._get_tile(x,y) # get tile in current board
+                    location[current] = (x, y) #store in dictionary
+                    print(location[current])
+                    print(current)
+            for x2 in range(3):
+                for y2 in range(3):
+                    solution2 = solution._get_tile(x2,y2) #get tile in solution board
+                    locationSol[solution2] = (x2, y2)
+            print(location.keys())
+            print(location.get(0))
+
+           # for i in range(9):
+        #        if location and locationSol:
+        #            locx, locy = location.get(i) #separate x and y coordinates from tuple
+       #             loc2x, loc2y = locationSol.get(i)
+        #            manHatDistance = manHatDistance + abs(loc2x-locx) + abs(loc2y-locy)
+
+        #return manHatDistance
+
+
+
+
+
     def greedy_best_first_search(self, solution, i = 0):
 
         return 0
@@ -121,7 +153,9 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
 
 if __name__ == '__main__':
     board = EightPuzzleBoard_Solver('034615278')
+
     solution = puzz.EightPuzzleBoard('046315278')
+    print(board.manhattan_distance(solution))
     solution = board.success_up()
     solution = solution.success_left()
     solution = solution.success_left()
@@ -129,6 +163,6 @@ if __name__ == '__main__':
 
 
 
-    print(board.uniform_cost_search(solution))
-    print("this is solution:{}".format(solution))
+  #  print(board.uniform_cost_search(solution))
+  #  print("this is solution:{}".format(solution))
 
