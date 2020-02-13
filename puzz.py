@@ -20,12 +20,31 @@ class EightPuzzleBoard:
                 immediately after creation,
         """
         self._board = list(board_string)
+        self._path = {}
+
         if mods:
             for x, y, val in mods:
                 self._set_tile(x, y, val)
 
+    def add_path(self, k, v):
+        self._path[k] = v
+
+    def get_path_cost(self):
+        return len(self._path)-1
+
     def _get_tile(self, x, y):  # return an individual tile value
         return self._board[6 - y * 3 + x]
+
+    def get_priority_number(self, dest, string):
+        if string == "bfs":
+            return 0
+        elif string == "uniform":
+            return self.get_path_cost()
+        elif string == "greedy":
+            return self.manhattan_distance(dest)
+        elif string == "astar":
+            return self.manhattan_distance(dest) + self.get_path_cost()
+        return
 
     def _set_tile(self, x, y, val):  # set an individual tile value
         self._board[6 - y * 3 + x] = val
@@ -107,9 +126,27 @@ class EightPuzzleBoard:
     def __eq__(self, other):
         return "".join(self._board) == "".join(other._board)
 
+    def __lt__(self, other):
+        return True
 
+    def manhattan_distance(self, dest):
+        m_distance = 0
+        if dest:
+            for x in range(3):  # iterate through each tile in board
+                for y in range(3):
+                    value_1 = self._get_tile(x, y)  # get tile in current board
 
+                    # go through the second board
+                    for x2 in range(3):
+                        for y2 in range(3):
+                            value_2 = dest._get_tile(x2, y2)  # get tile in solution board
+                            if value_2 is value_1:
+                                m_distance += (abs(x2 - x)+abs(y2-y))
+        return m_distance
 
-
+if __name__ == '__main__':
+    x = EightPuzzleBoard('084615273')
+    y = EightPuzzleBoard('876543210')
+    print(x.manhattan_distance(y))
 
 
