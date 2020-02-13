@@ -44,8 +44,7 @@ class EightPuzzleBoard:
             return self.manhattan_distance(dest)
         elif string == "astar":
             return self.manhattan_distance(dest) + self.get_path_cost()
-        print("invalid algorithm name, try again")
-        return None
+        return
 
     def _set_tile(self, x, y, val):  # set an individual tile value
         self._board[6 - y * 3 + x] = val
