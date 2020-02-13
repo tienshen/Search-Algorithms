@@ -78,22 +78,22 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
                 for y in range(3):
                     current = self._get_tile(x,y) # get tile in current board
                     location[current] = (x, y) #store in dictionary
-                    print(location[current])
-                    print(current)
+                    print(location.get(current))
+                   # print(current)
             for x2 in range(3):
                 for y2 in range(3):
                     solution2 = solution._get_tile(x2,y2) #get tile in solution board
                     locationSol[solution2] = (x2, y2)
-            print(location.keys())
-            print(location.get(0))
+           # print(location.keys())
+           # print(location.get('4'))
 
-           # for i in range(9):
-        #        if location and locationSol:
-        #            locx, locy = location.get(i) #separate x and y coordinates from tuple
-       #             loc2x, loc2y = locationSol.get(i)
-        #            manHatDistance = manHatDistance + abs(loc2x-locx) + abs(loc2y-locy)
+            for i in range(9):
+                if location and locationSol:
+                    locx, locy = location.get(str(i)) #separate x and y coordinates from tuple
+                    loc2x, loc2y = locationSol.get(str(i))
+                    manHatDistance = manHatDistance + abs(loc2x-locx) + abs(loc2y-locy)
 
-        #return manHatDistance
+        return manHatDistance
 
 
 
