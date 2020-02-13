@@ -4,6 +4,7 @@
 # class:    COMPSCI 383 Artificial Intelligence
 # *************************************************
 import puzz
+import sys
 import queue
 import copy
 import random
@@ -14,8 +15,10 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
 
     def special_search(self, dest, string = "bfs"):
         if dest is None:  # initial condition
-            return "invalid goal state"
-            # declare variables/objects/lists
+            return "invalid goal state, try again"
+        if string not in ["bfs", "uniform", "greedy", "astar"]:
+            return "invalid algorithm name, please use (bfs, uniform, greedy, astar)"
+
         frontier = queue.PriorityQueue()
         self.add_path(self, "start")
         frontier.put((0,self))
@@ -67,14 +70,13 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
 if __name__ == '__main__':
     board = EightPuzzleBoard_Solver('034615278')
     dest = board.random_dest_generator(50)
+    #sys.argv = [None, 'greedy', '034615278', '345701862'] # try ' python solver.py greedy 034615278 345701862 '
+    print(sys.argv)
+    if sys.argv[1] and sys.argv[2] and sys.argv[3]:
+        string = sys.argv[1]
+        board = EightPuzzleBoard_Solver(sys.argv[2])
+        dest = EightPuzzleBoard_Solver(sys.argv[3])
 
-    # solution = board.success_up()
-    # solution = solution.success_left()
-    # solution = solution.success_left()
-    # string = sys.argv[1]
-    # board = EightPuzzleBoard_Solver(sys.argv[2])
-    # dest = sys.argv[3]
-    print("\ngenerated destination: {}\n".format(dest))
+    # print("\ngenerated destination: {}\n".format(dest))
 
-
-    print(board.special_search(dest, "greedy"))
+    print(board.special_search(dest, string))
