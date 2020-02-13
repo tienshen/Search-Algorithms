@@ -131,12 +131,8 @@ class EightPuzzleBoard:
         return True
 
     def manhattan_distance(self, dest):
-        location = {}
-        locationSol = {}
         m_distance = 0
-        # dict to store location of each index
         if dest:
-            # check if solution is valid
             for x in range(3):  # iterate through each tile in board
                 for y in range(3):
                     value_1 = self._get_tile(x, y)  # get tile in current board
