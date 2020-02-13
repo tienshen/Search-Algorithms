@@ -40,7 +40,25 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
 
     def uniform_cost_search(self, solution, i = 0):
 
+<<<<<<< Updated upstream
         return 0
+=======
+    def manhanttan_func(self, current, solution):
+        if solution:
+            #if solution is valid
+            for x in range(3):
+                for y in range(3):
+                    current = self._get_tile(x,y)
+                    #get current tile
+                    #find tile in solution
+                    for x2 in range(3):
+                        for y2 in range (3):
+                            if current == solution._get_tile(x2, y2):
+                            #if you find the tile in the solution tile
+                                locSoluTile  = (x2, y2)
+                                #store the location of the tile
+                                
+>>>>>>> Stashed changes
 
     def greedy_best_first_search(self, solution, i = 0):
 
