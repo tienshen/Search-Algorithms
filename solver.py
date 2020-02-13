@@ -5,6 +5,7 @@
 # *************************************************
 import puzz
 import queue
+import copy
 from time import time
 
 class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
@@ -13,26 +14,28 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
         if solution is None: #initial condition
             return "invalid goal state"
         # declare variables/objects/lists
+        to = time
         frontier = queue.Queue()
-        frontier.put((self, 0, {self: "start"}))
+        self.add_path(self, "start")
+        frontier.put(self)
         explored = []
         frontCount = 1
         # start looping through the breadth
         while not frontier.empty():
-            tuple = frontier.get() # pop from the frontier
-            node, pathcost, path = tuple # extract puzzle obj, int cost, and dict route
-            explored.append(node) # add the board to the explored list
-            for m, n in node.successors().items(): # obtain all possible moves, m = "left", "right", etc. n = puuzzle board
+            node = frontier.get()       # pop from the frontier
+            explored.append(node)       # add the board to the explored list
+            for m, n in node.successors().items():      # obtain all possible moves, m = "left", "right", etc. n = puuzzle board
                 if n and (n not in explored) and (not self.in_queue(frontier, n)) :
-                    path[n] = m # append successor into route
-                    if str(n) == str(solution): # check if destination reached
-                        for k, v in path.items(): # loop to print the route
+                    n._path = copy.deepcopy(node._path) #deep copy the traveled course
+                    n.add_path(n, m)
+                    if str(n) == str(solution):         # check if destination reached
+                        for k, v in n._path.items():    # loop to print the route
                             print("{}\t{}".format(v,k))
-                        return "success:\npath cost: {}\nfrontier: {}\nexplored: {}".format(pathcost+1, frontCount, len(explored))
+                        return "success:\npath cost: {}\nfrontier: {}\nexplored: {}".format(len(n._path)-1, frontCount, len(explored))
                     else:
                         frontCount += 1
-                        frontier.put((n, pathcost+1, path))
-        return "fail:\npath cost: {}\nfrontier: {}\nexplored: {}".format(pathcost, frontCount, len(explored))
+                        frontier.put(n)
+        return "fail:\npath cost: {}\nfrontier: {}\nexplored: {}".format(len(n._path)-1, frontCount, len(explored))
 
 
 
@@ -41,30 +44,27 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
             return "invalid goal state"
             # declare variables/objects/lists
         frontier = queue.PriorityQueue()
-        frontier.put((0,(self, 0, {self: "start"})))
-        explored = []
+        self.add_path(self, "start")
+        frontier.put((0,self))
+        explored = set()
         frontCount = 1
         # start looping through the breadth
         while not frontier.empty():
-            tuple = frontier.get()  # pop from the frontier
-            node, pathcost, path = tuple[1]  # extract puzzle obj, int cost, and dict route
-            explored.append(node)  # add the board to the explored list
-            if str(node) == str(solution):  # check if destination reached
-                # for k, v in path.items():  # loop to print the route
-                #     print("{}\t{}".format(v, k))
-                return "success:\npath cost: {}\nfrontier: {}\nexplored: {}".format(pathcost, frontCount, len(explored))
-            for m, n in node.successors().items():  # obtain all possible moves, m = "left", "right", etc. n = puuzzle board
-                if n and (n not in explored) and (not self.in_priority_queue(frontier, n)):
-                    path[n] = m  # append successor into route
-                    frontCount += 1 #
-                    frontier.put((pathcost+1, (n, pathcost + 1, path)))
-                    for k, v in path.items():  # loop to print the route
-                        print("{}\t{}".format(v, k))
-
-                    print("\n")
+            pnum, node = frontier.get()     # pop from the frontier
+            explored.add(node)           # add the board to the explored list
+            if str(node) == str(solution):          # check if destination reached
+                for k, v in node._path.items():     # loop to print the route
+                    print("{}\t{}".format(v, k))
+                return "success:\npath cost: {}\nfrontier: {}\nexplored: {}".format(len(node._path)-1, frontCount, len(explored))
+            for m, n in node.successors().items():          # obtain all possible moves, m = "left", "right", etc. n = puuzzle board
+                if n and (n not in explored):               # and (not self.in_priority_queue(frontier, n)):
+                    n._path = copy.deepcopy(node._path)     # deep copy the traveled course
+                    n.add_path(n, m)                        # add new node to the route
+                    frontCount += 1
+                    frontier.put((len(node._path)-1, n))
                 else:
-                    self.update_priority_queue(frontier, (pathcost + 1, (n, pathcost + 1, path))) # this command checks that if n is in frontier, if frontier(n).cost>n.cost, and updates it
-        return "fail:\npath cost: {}\nfrontier: {}\nexplored: {}".format(pathcost, frontCount, len(explored))
+                    self.update_priority_queue(frontier, (len(node._path)-1,n))     # this command checks that if n is in frontier, if frontier(n).cost>n.cost, and updates it
+        return "fail:\npath cost: {}\nfrontier: {}\nexplored: {}".format(len(node._path)-1, frontCount, len(explored))
 
 
     def greedy_best_first_search(self, solution, i = 0):
@@ -81,7 +81,7 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
         temp = queue.Queue()
         while not frontier.empty():
             node = frontier.get()
-            if node[1] is n:
+            if node is n:
                 boo = True
             temp.put(node)
         while not temp.empty():
@@ -95,7 +95,7 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
         temp = queue.Queue()
         while not frontier.empty():
             node = frontier.get()
-            if node[1][0] is n:
+            if node[1] is n:
                 boo = True
             temp.put(node)
         while not temp.empty():
@@ -109,8 +109,8 @@ class EightPuzzleBoard_Solver(puzz.EightPuzzleBoard):
         temp = queue.Queue()
         while not frontier.empty():
             node = frontier.get()
-            if node[1][0] is n[1][0] and node[0] > n[0]:
-                    temp.put(n)
+            if node[1] is n[1] and node[0] > n[0]:
+                temp.put(n)
             else:
                 temp.put(node)
         while not temp.empty():
@@ -125,10 +125,10 @@ if __name__ == '__main__':
     solution = board.success_up()
     solution = solution.success_left()
     solution = solution.success_left()
-    solution = solution.success_down()
+    #solution = solution.success_down()
 
 
 
-    print(board.breadth_search(solution))
+    print(board.uniform_cost_search(solution))
     print("this is solution:{}".format(solution))
 
